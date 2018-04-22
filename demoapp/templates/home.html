@@ -1,0 +1,78 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <script src="https://unpkg.com/vue"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet">
+    <link href="https://unpkg.com/vuetify/dist/vuetify.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <title>Django Vue.js Demo</title>
+</head>
+
+<body>
+   <div id="app">
+     <v-app>
+      <v-content>
+<template>
+  <v-jumbotron color="grey lighten-2">
+    <v-container fill-height>
+      <v-layout align-center>
+        <v-flex>
+          <h3 class="display-3">Welcome to Sell me Your Shit!</h3>
+          <span class="subheading">List you business for sale or calculate its value using our propreitary algorithim!</span>
+          <v-divider class="my-3"></v-divider>
+          <div class="title mb-3">Check out our newest features!</div>
+          <v-btn large color="primary" class="mx-0">See more</v-btn>
+        </v-flex>
+      </v-layout>
+    </v-container>
+  </v-jumbotron>
+</template>
+        <v-layout>
+          <v-flex xs12 sm6 offset-sm3>
+            <v-card>
+              ${business}$
+              <v-form>
+                <v-text-field label="Name" v-model="business.name"></v-text-field>
+                <v-text-field label="Description" textarea v-model="business.description"></v-text-field>
+                <v-text-field label="Address" v-model="business.address"></v-text-field>
+                <v-select :items="users" item-text="name" item-value="id" label="Owner" v-model="business.owner"></v-select>
+                <v-select :items="users" item-text="name" item-value="id" label="Broker" v-model="business.broker"></v-select>
+
+              </v-form>
+              <v-btn color="success" v-on:click="postBusiness">Success</v-btn>
+            </v-card>
+          </v-flex>
+        </v-layout>
+        <v-layout>
+          <v-flex xs12 sm6 offset-sm3>
+            <v-card>
+              ${incomes}$
+              <v-data-table :headers="headers" :items="incomes" class="elevation-1" expand>
+                <template slot="items" slot-scope="props">
+                  <td><v-text-field type="number" placholder="123" hide-details v-model="incomes[props.index].year"></v-text-field></td>
+                  <td><v-text-field type="number" placholder="123" hide-details v-model="incomes[props.index].sales"></v-text-field></td>
+                  <td><v-text-field type="number" placholder="123" hide-details v-model="incomes[props.index].cost"></v-text-field></td>
+                </template>
+          </v-data-table>
+              <v-btn color="success" v-on:click="postBusiness">Success</v-btn>
+            </v-card>
+          </v-flex>
+        </v-layout>
+      </v-content>
+    </v-app>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.4"></script>
+<script src="https://unpkg.com/vuetify/dist/vuetify.js"></script>
+<script src="{% static "demoapp/test.js" %}"/>
+<script src="{% static "demoapp/datatable.js" %}"/>
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+<script></script>
+</body>
+
+</html>

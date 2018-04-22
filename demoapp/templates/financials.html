@@ -1,0 +1,251 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <script src="https://unpkg.com/vue"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet">
+    <link href="https://unpkg.com/vuetify/dist/vuetify.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <title>Django Vue.js Demo</title>
+</head>
+
+<body>
+<div id="app2">
+  <v-app id="inspire">
+    <v-stepper v-model="e1">
+      <v-stepper-header>
+        <v-stepper-step step="1" :complete="e1 > 1">Income</v-stepper-step>
+        <v-divider></v-divider>
+        <v-stepper-step step="2" :complete="e1 > 2">Balance Sheet</v-stepper-step>
+        <v-divider></v-divider>
+        <v-stepper-step step="3">Valuation</v-stepper-step>
+      </v-stepper-header>
+      <v-stepper-items>
+        <v-stepper-content step="1">
+          <v-card color="grey lighten-1" class="mb-2" height="500px">
+            <!--Income TABLE-->
+            <div>
+              <v-dialog v-model="dialog" max-width="500px">
+                <v-btn color="primary" dark slot="activator" class="mb-2">New Item</v-btn>
+                <v-card>
+                  <v-card-title>
+                    <span class="headline">${ formTitle }$</span>
+                  </v-card-title>
+                  <v-card-text>
+                    <v-container grid-list-md>
+                      <v-layout wrap>
+                        <v-flex xs12 sm6 md4>
+                          <v-text-field label="Year" v-model="editedItem.name"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm6 md4>
+                          <v-text-field label="Sales" v-model="editedItem.sales"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm6 md4>
+                          <v-text-field label="Expenses" v-model="editedItem.costs"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm6 md4>
+                          <v-text-field label="Taxes" v-model="editedItem.taxes"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm6 md4>
+                          <v-text-field label="Amortization" v-model="editedItem.amort"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm6 md4>
+                          <v-text-field label="Depreciation" v-model="editedItem.depr"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm6 md4>
+                          <v-text-field label="Owner Salary" v-model="editedItem.owner"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm6 md4>
+                          <v-text-field label="Bank Expenses" v-model="editedItem.bank"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm6 md4>
+                          <v-text-field label="Wages" v-model="editedItem.wage"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm6 md4>
+                          <v-text-field label="Salaries and Benefits" v-model="editedItem.s_b"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm6 md4>
+                          <v-text-field label="Rent" v-model="editedItem.rent"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm6 md4>
+                          <v-text-field label="Utilities" v-model="editedItem.util"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm6 md4>
+                          <v-text-field label="Insurance" v-model="editedItem.ins"></v-text-field>
+                        </v-flex>
+                      </v-layout>
+                    </v-container>
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="blue darken-1" flat @click.native="close">Cancel</v-btn>
+                    <v-btn color="blue darken-1" flat @click.native="save">Save</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+              <v-data-table
+                :headers="incheaders"
+                :items="incomes"
+                hide-actions
+                class="elevation-1"
+              >
+                <template slot="items" slot-scope="props">
+                  <td class="justify-center layout px-0">
+                    <v-btn icon class="mx-0" @click="editItem(props.item)">
+                      <v-icon color="teal">edit</v-icon>
+                    </v-btn>
+                    <v-btn icon class="mx-0" @click="deleteItem(props.item)">
+                      <v-icon color="red">delete</v-icon>
+                    </v-btn>
+                  </td>
+                  <td>${ props.item.name }$</td>
+                  <td class="text-xs-right">${ props.item.sales }$</td>
+                  <td class="text-xs-right">${ props.item.costs }$</td>
+                  <td class="text-xs-right">${ props.item.taxes }$</td>
+                  <td class="text-xs-right">${ props.item.amort }$</td>
+                  <td class="text-xs-right">${ props.item.depr }$</td>
+                  <td class="text-xs-right">${ props.item.owner }$</td>
+                  <td class="text-xs-right">${ props.item.bank }$</td>
+                  <td class="text-xs-right">${ props.item.wage }$</td>
+                  <td class="text-xs-right">${ props.item.s_b }$</td>
+                  <td class="text-xs-right">${ props.item.rent }$</td>
+                  <td class="text-xs-right">${ props.item.util }$</td>
+                  <td class="text-xs-right">${ props.item.ins }$</td>
+                </template>
+                <template slot="no-data">
+                  <v-btn color="primary" @click="initialize">Reset</v-btn>
+                </template>
+              </v-data-table>
+            </div>
+
+          </v-card>
+          <v-btn color="primary" @click.native="e1 = 2">Continue</v-btn>
+          <v-btn flat>Cancel</v-btn>
+        </v-stepper-content>
+        <v-stepper-content step="2">
+          <v-card color="grey lighten-1" class="mb-5" height="200px">
+            <!-- Balance Table -->
+            <div>
+              <v-dialog v-model="dialog2" max-width="500px">
+                <v-btn color="primary" dark slot="activator" class="mb-2">New Item</v-btn>
+                <v-card>
+                  <v-card-title>
+                    <span class="headline">${ BalformTitle }$</span>
+                  </v-card-title>
+                  <v-card-text>
+                    <v-container grid-list-md>
+                      <v-layout wrap>
+                        <v-flex xs12 sm6 md4>
+                          <v-text-field label="Year" v-model="BaleditedItem.name"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm6 md4>
+                          <v-text-field label="Cash" v-model="BaleditedItem.cash"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm6 md4>
+                          <v-text-field label="Accounts Receivable" v-model="BaleditedItem.ar"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm6 md4>
+                          <v-text-field label="Investments" v-model="BaleditedItem.inv"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm6 md4>
+                          <v-text-field label="FF&E Captial" v-model="BaleditedItem.ffe"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm6 md4>
+                          <v-text-field label="Accounts Payable" v-model="BaleditedItem.ap"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm6 md4>
+                          <v-text-field label="Bank Indebtness" v-model="BaleditedItem.bank"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm6 md4>
+                          <v-text-field label="Shareholder Dues" v-model="BaleditedItem.shdue"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm6 md4>
+                          <v-text-field label="Current Portfolio" v-model="BaleditedItem.curp"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm6 md4>
+                          <v-text-field label="Longterm Indebtness" v-model="BaleditedItem.debt"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm6 md4>
+                          <v-text-field label="Shareholder Equity" v-model="BaleditedItem.shar"></v-text-field>
+                        </v-flex>
+                      </v-layout>
+                    </v-container>
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="blue darken-1" flat @click.native="balclose">Cancel</v-btn>
+                    <v-btn color="blue darken-1" flat @click.native="balsave">Save</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+              <v-data-table
+                :headers="balheaders"
+                :items="balances"
+                hide-actions
+                class="elevation-1"
+              >
+                <template slot="items" slot-scope="props">
+                  <td class="justify-center layout px-0">
+                    <v-btn icon class="mx-0" @click="baleditItem(props.item)">
+                      <v-icon color="teal">edit</v-icon>
+                    </v-btn>
+                    <v-btn icon class="mx-0" @click="baldeleteItem(props.item)">
+                      <v-icon color="pink">delete</v-icon>
+                    </v-btn>
+                  </td>
+                  <td>${ props.item.name }$</td>
+                  <td class="text-xs-right">${ props.item.cash }$</td>
+                  <td class="text-xs-right">${ props.item.ar }$</td>
+                  <td class="text-xs-right">${ props.item.inv }$</td>
+                  <td class="text-xs-right">${ props.item.ffe }$</td>
+                  <td class="text-xs-right">${ props.item.ap }$</td>
+                  <td class="text-xs-right">${ props.item.bank }$</td>
+                  <td class="text-xs-right">${ props.item.shdue }$</td>
+                  <td class="text-xs-right">${ props.item.curp }$</td>
+                  <td class="text-xs-right">${ props.item.debt }$</td>
+                  <td class="text-xs-right">${ props.item.shar }$</td>
+                </template>
+                <template slot="no-data">
+                  <v-btn color="primary" @click="initialize">Reset</v-btn>
+                </template>
+              </v-data-table>
+            </div>
+
+          </v-card>
+          <v-btn color="primary" @click.native="e1 = 3">Continue</v-btn>
+          <v-btn flat>Cancel</v-btn>
+        </v-stepper-content>
+        <v-stepper-content step="3">
+          <v-card color="grey lighten-1" class="mb-5" height="500px">
+            <h4>${calculations.debt}$</h4>
+            <v-btn color="primary" @click="calculateDebt">Debt</v-btn>
+            <v-btn color="primary" @click="calculateEquity">Equity</v-btn>
+            <v-btn color="primary" @click="calculateGrowthRate">Growth</v-btn>
+            <v-btn color="danger" @click="getValuation">DATAScience</v-btn>
+            <br>
+            <v-text-field label="Buyer Expected Return" v-model="calculations.eroi"></v-text-field>
+            <v-text-field label="Aggregated Cost of Debt" v-model="calculations.cod"></v-text-field>
+            <br>
+            ${balances}$
+            ${incomes}$
+            ${calculations}$
+          </v-card>
+          <v-btn color="primary" @click.native="e1 = 1">Continue</v-btn>
+          <v-btn flat>Cancel</v-btn>
+        </v-stepper-content>
+      </v-stepper-items>
+    </v-stepper>
+  </v-app>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.4"></script>
+<script src="https://unpkg.com/vuetify/dist/vuetify.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+<script src="{% static "demoapp/income.js" %}"/>
+<script></script>
+</body>
+
+</html>
